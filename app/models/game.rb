@@ -24,12 +24,9 @@ class Game < ApplicationRecord
   end
 
   def end_turn(current_player)
-    cards.revealed_or_owned_by(current_player.id).group_by(&:value).each do |value, group|
-      if group.length == 3
-        group.map(&:win)
-      else
-        group.map(&:hide)
-      end
+    ActiveRecord::Base.transaction do
+      claim_trios_and_hide_mismatches(current_player)
+      assign_next_player_turn
     end
   end
 
@@ -48,6 +45,17 @@ class Game < ApplicationRecord
   end
 
   private
+
+  def claim_trios_and_hide_mismatches(current_player)
+    cards.revealed_or_owned_by(current_player.id).group_by(&:value).each do |value, group|
+      if group.length == 3
+        group.map(&:win)
+        current_player.scored
+      else
+        group.map(&:hide)
+      end
+    end
+  end
 
   def revealed_cards
     cards.revealed
@@ -75,5 +83,17 @@ class Game < ApplicationRecord
   end
 
   def assign_first_user_turn
+    players.in_order.first.start_turn
+  end
+
+  def assign_next_player_turn
+    active_turn_player = players.active_turn.first
+    active_turn_player.end_turn
+
+    if (active_turn_player == players.in_order.last)
+      assign_first_user_turn
+    else
+      players.in_order[players.find_index(active_turn_player) + 1].start_turn
+    end
   end
 end

@@ -2,13 +2,11 @@
   <%= button_to "Start Game", start_game_path(@game) %>
 <% end %>
 
-<% if @game.in_progress? %>
+<% if @game.in_setup? || @game.in_progress? %>
   <script type="text/javascript">
     setInterval(() => window.location.reload(), 5000);
   </script>
-<% end %>
 
-<% if @game.in_setup? || @game.in_progress? %>
   <div style="width:100%;box-sizing:border-box;padding:50px;text-align:center;background-color:#ccc;">
     <% if @game.mismatch?(@current_player) %>
       <%= button_to "End Turn", end_turn_game_path(@game) %>
@@ -31,9 +29,12 @@
       <div style="width:25%;background-color:#<%= colors[idx] %>;box-sizing:border-box;padding:50px;text-align:center;">
         <% if player == @current_player %>
           <p><strong>This Is You</strong></p>
+          <% if @current_player.active_turn? %>
+            <p><strong>It's Your Turn</strong></p>
+          <% end %>
         <% end %>
 
-        <%= player.name %>
+        <%= player.name %> (score: <%= player.score %>)
 
         <hr>
 
