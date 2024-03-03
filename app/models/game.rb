@@ -35,7 +35,7 @@ class Game < ApplicationRecord
   end
 
   def trio?(current_player)
-    cards.revealed_or_owned_by(current_player.id).group_by(&:value).any? do |_, group|
+    cards.revealed_or_playable_by(current_player.id).group_by(&:value).any? do |_, group|
       group.length == 3
     end
   end
@@ -47,7 +47,7 @@ class Game < ApplicationRecord
   private
 
   def claim_trios_and_hide_mismatches(current_player)
-    cards.revealed_or_owned_by(current_player.id).group_by(&:value).each do |value, group|
+    cards.revealed_or_playable_by(current_player.id).group_by(&:value).each do |value, group|
       if group.length == 3
         group.map(&:win)
         current_player.scored

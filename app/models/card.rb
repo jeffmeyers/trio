@@ -7,7 +7,11 @@ class Card < ApplicationRecord
   scope :on_table, -> { where(player_id: nil) }
   scope :sorted, -> { order(value: :asc).in_play }
   scope :revealed, -> { where(state: :revealed) }
-  scope :revealed_or_owned_by, ->(player_id) { revealed.or(where(player_id: player_id)).in_play }
+  scope :revealed_or_playable_by, ->(player_id) { revealed.or(playable_by(player_id)).in_play }
+  scope :playable_by, ->(player_id) { owned_by(player_id).where(value: [min_for(player_id), max_for(player_id)]) }
+  scope :min_for, ->(player_id) { owned_by(player_id).pluck(:value).min }
+  scope :max_for, ->(player_id) { owned_by(player_id).pluck(:value).max }
+  scope :owned_by, ->(player_id) { where(player_id: player_id) }
   scope :in_play, -> { where.not(state: :won) }
 
   enum state: {
