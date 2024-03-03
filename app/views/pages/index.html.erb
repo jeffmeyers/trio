@@ -1,0 +1,10 @@
+<%= form_for @new_game do |f| %>
+  <%= text_field_tag "player[name]", nil, placeholder: "Player Name", required: true %>
+  <%= f.submit "Start New Game" %>
+<% end %>
+
+<%= form_for @new_player do |f| %>
+  <%= f.number_field :game_id, placeholder: "Game ID", required: true %>
+  <%= f.text_field :name, placeholder: "Player Name", required: true %>
+  <%= f.submit "Join Game" %>
+<% end %>

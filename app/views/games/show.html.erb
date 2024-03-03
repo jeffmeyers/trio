@@ -1,0 +1,35 @@
+<% if @game.in_setup? %>
+  <%= button_to "Start Game", start_game_path(@game) %>
+<% end %>
+
+<% if @game.in_setup? || @game.in_progress? %>
+  <div style="width:100%;box-sizing:border-box;padding:50px;text-align:center;background-color:#ccc;">
+    <p><strong>Cards on Table</strong></p>
+    <%= @game.cards.on_table.map(&:display_value).join(", ") %>
+  </div>
+
+  <% colors = %w[eee efe eef fee] %>
+  <div style="width:100%;display:flex;flex-wrap:wrap;">
+    <% @game.players.each_with_index do |player, idx| %>
+      <div style="width:25%;background-color:#<%= colors[idx] %>;box-sizing:border-box;padding:50px;text-align:center;">
+        <% if player == @current_player %>
+          <p><strong>This Is You</strong></p>
+        <% end %>
+
+        <%= player.name %>
+
+        <hr>
+
+        <% if player == @current_player %>
+          <p><strong>Your Cards</strong></p>
+          <p><%= @current_player.sorted_cards.pluck(:value).join(", ") %></p>
+        <% end %>
+
+        <% if player != @current_player %>
+          <%= button_to "Show Lowest Card" %>
+          <%= button_to "Show Highest Card" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
