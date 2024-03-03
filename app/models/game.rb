@@ -23,17 +23,35 @@ class Game < ApplicationRecord
     end
   end
 
-  def apply(action)
-    ActiveRecord::Base.transaction do
-      action.entity.reveal
+  def end_turn(current_player)
+    cards.revealed_or_owned_by(current_player.id).group_by(&:value).each do |value, group|
+      if group.length == 3
+        group.map(&:win)
+      else
+        group.map(&:hide)
+      end
     end
   end
 
-  def end_turn
-    cards.revealed.map(&:hide)
+  def mismatch?(current_player)
+    cards.revealed.pluck(:value).uniq.length > 1
+  end
+
+  def trio?(current_player)
+    cards.revealed_or_owned_by(current_player.id).group_by(&:value).any? do |_, group|
+      group.length == 3
+    end
+  end
+
+  def reset!
+    cards.map(&:hide)
   end
 
   private
+
+  def revealed_cards
+    cards.revealed
+  end
 
   def mark_in_progress
     update(state: :in_progress)

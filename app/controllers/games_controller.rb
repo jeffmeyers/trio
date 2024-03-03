@@ -18,7 +18,13 @@ class GamesController < ApplicationController
       type: params[:action_type],
       entity_id: params[:action_entity_id]
     )
-    game.apply(action)
+    action.apply
+    redirect_to game_path(game)
+  end
+
+  def end_turn
+    game = Game.find(params[:id])
+    game.end_turn(@current_player)
     redirect_to game_path(game)
   end
 

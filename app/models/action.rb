@@ -8,6 +8,12 @@ class Action
     @entity_id = entity_id
   end
 
+  def apply
+    entity.reveal
+  end
+
+  private
+
   def entity
     @entity ||=
       case @type

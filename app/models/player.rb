@@ -13,4 +13,8 @@ class Player < ApplicationRecord
   def highest_card
     sorted_cards.last
   end
+
+  def has_card?(value)
+    cards.pluck(:value).include?(value)
+  end
 end

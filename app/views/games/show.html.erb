@@ -2,7 +2,22 @@
   <%= button_to "Start Game", start_game_path(@game) %>
 <% end %>
 
+<% if @game.in_progress? %>
+  <script type="text/javascript">
+    setInterval(() => window.location.reload(), 5000);
+  </script>
+<% end %>
+
 <% if @game.in_setup? || @game.in_progress? %>
+  <div style="width:100%;box-sizing:border-box;padding:50px;text-align:center;background-color:#ccc;">
+    <% if @game.mismatch?(@current_player) %>
+      <%= button_to "End Turn", end_turn_game_path(@game) %>
+    <% elsif @game.trio?(@current_player) %>
+      trioooo
+      <%= button_to "End Turn", end_turn_game_path(@game) %>
+    <% end %>
+  </div>
+
   <div style="width:100%;box-sizing:border-box;padding:50px;text-align:center;background-color:#ccc;">
     <p><strong>Cards on Table</strong></p>
     <% @game.cards.on_table.each do |card| %>

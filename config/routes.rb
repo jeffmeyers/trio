@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   resources :games, only: [:show, :create] do
     post :start, on: :member
     post :action, on: :member
+    post :end_turn, on: :member
   end
 
   resources :players, only: [:create]
