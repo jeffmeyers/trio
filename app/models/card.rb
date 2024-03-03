@@ -1,5 +1,5 @@
 class Card < ApplicationRecord
-  HIDDEN_VALUE = "?"
+  HIDDEN_VALUE = "Reveal"
 
   belongs_to :player, optional: true
   belongs_to :game

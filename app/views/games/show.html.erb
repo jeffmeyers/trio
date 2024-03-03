@@ -5,7 +5,9 @@
 <% if @game.in_setup? || @game.in_progress? %>
   <div style="width:100%;box-sizing:border-box;padding:50px;text-align:center;background-color:#ccc;">
     <p><strong>Cards on Table</strong></p>
-    <%= @game.cards.on_table.map(&:display_value).join(", ") %>
+    <% @game.cards.on_table.each do |card| %>
+      <%= button_to card.display_value, action_game_path(@game), params: { action_type: Action::REVEAL_ON_TABLE, action_entity_id: card.id } %>
+    <% end %>
   </div>
 
   <% colors = %w[eee efe eef fee] %>

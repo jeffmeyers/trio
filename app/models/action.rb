@@ -16,6 +16,7 @@ class Action
       when REVEAL_HIGHEST
         Player.find(@entity_id).highest_card
       when REVEAL_ON_TABLE
+        Card.find(@entity_id)
       end
   end
 end
