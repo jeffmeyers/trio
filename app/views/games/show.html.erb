@@ -26,8 +26,13 @@
         <% end %>
 
         <% if player != @current_player %>
-          <%= button_to "Show Lowest Card" %>
-          <%= button_to "Show Highest Card" %>
+          <%= button_to "Show Lowest Card", action_game_path(@game), params: { action_type: Action::REVEAL_LOWEST, action_entity_id: player.id } %>
+          <%= button_to "Show Highest Card", action_game_path(@game), params: { action_type: Action::REVEAL_HIGHEST, action_entity_id: player.id } %>
+        <% end %>
+
+        <% if player.cards.revealed.any? %>
+          <p><strong>Revealed Cards</strong></p>
+          <p><%= player.cards.revealed.pluck(:value).join(", ") %></p>
         <% end %>
       </div>
     <% end %>

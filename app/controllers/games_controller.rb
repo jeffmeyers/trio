@@ -12,6 +12,16 @@ class GamesController < ApplicationController
     redirect_to game_path(game)
   end
 
+  def action
+    game = Game.find(params[:id])
+    action = Action.new(
+      type: params[:action_type],
+      entity_id: params[:action_entity_id]
+    )
+    game.apply(action)
+    redirect_to game_path(game)
+  end
+
   def show
     @game = Game.includes(:players).find(params[:id])
   end

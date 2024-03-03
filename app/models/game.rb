@@ -23,6 +23,16 @@ class Game < ApplicationRecord
     end
   end
 
+  def apply(action)
+    ActiveRecord::Base.transaction do
+      action.entity.reveal
+    end
+  end
+
+  def end_turn
+    cards.revealed.map(&:hide)
+  end
+
   private
 
   def mark_in_progress

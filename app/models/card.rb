@@ -6,6 +6,7 @@ class Card < ApplicationRecord
 
   scope :on_table, -> { where(player_id: nil) }
   scope :sorted, -> { order(value: :asc) }
+  scope :revealed, -> { where(state: :revealed) }
 
   enum state: {
     hidden: 0,
@@ -15,5 +16,13 @@ class Card < ApplicationRecord
   def display_value
     return value if revealed?
     HIDDEN_VALUE
+  end
+
+  def reveal
+    update(state: :revealed)
+  end
+
+  def hide
+    update(state: :hidden)
   end
 end
